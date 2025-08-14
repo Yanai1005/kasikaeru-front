@@ -1,47 +1,7 @@
-# Welcome to Remix + Cloudflare!
+# かしカエル
 
-- 📖 [Remix docs](https://remix.run/docs)
-- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
-
-## Development
-
-Run the dev server:
-
-```sh
-npm run dev
-```
-
-To run Wrangler:
-
-```sh
-npm run build
-npm run start
-```
-
-## Typegen
-
-Generate types for your Cloudflare bindings in `wrangler.toml`:
-
-```sh
-npm run typegen
-```
-
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then, deploy your app to Cloudflare Pages:
-
-```sh
-npm run deploy
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+## 環境構築
+[構築方法](https://github.com/Yanai1005/kasikaeru-front/wiki/%E9%96%8B%E7%99%BA%EF%BC%9A%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+## Git・GitHubに関すること
+- [コミットメッセージに関して](https://github.com/Yanai1005/kasikaeru-front/wiki/%E9%96%8B%E7%99%BA%EF%BC%9A%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%81%AB%E9%96%A2%E3%81%97%E3%81%A6)
+- [ブランチに関して](https://github.com/Yanai1005/kasikaeru-front/wiki/%E9%96%8B%E7%99%BA%EF%BC%9A%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E3%81%AB%E9%96%A2%E3%81%97%E3%81%A6)
