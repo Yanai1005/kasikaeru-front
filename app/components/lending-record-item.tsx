@@ -5,8 +5,8 @@ import React from "react";
 // Propsの型を定義
 type LendingRecordItemProps = {
   record: {
-    lentId: string;
-    objectId: string;
+    lentId: number;
+    objectId: number;
     objectName: string;
     name: string;
     discordId: string;

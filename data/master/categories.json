@@ -1,14 +1,14 @@
 [
   {
-    "categoryId": "cat_001",
+    "categoryId": 1,
     "categoryName": "電子機器"
   },
   {
-    "categoryId": "cat_002",
+    "categoryId": 2,
     "categoryName": "書籍"
   },
   {
-    "categoryId": "cat_003",
+    "categoryId": 3,
     "categoryName": "文房具"
   }
 ]
