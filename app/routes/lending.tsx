@@ -13,7 +13,6 @@ export default function Lending() {
         貸し出し | 貸し借り管理システム
       </h1>
       <Navbar />
-      {/* バーコードスキャナーコンポーネントを配置 */}
       <BarcodeScanner />
     </div>
   );

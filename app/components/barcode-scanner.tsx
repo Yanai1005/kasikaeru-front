@@ -1,5 +1,3 @@
-
-
 import { useRef, useEffect } from "react";
 
 export default function BarcodeScanner() {
@@ -9,7 +7,9 @@ export default function BarcodeScanner() {
     // カメラへのアクセス許可をリクエスト
     async function startCamera() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
         if (videoRef.current) {
           // カメラ映像をvideo要素にセット
           videoRef.current.srcObject = stream;
@@ -24,32 +24,27 @@ export default function BarcodeScanner() {
     // コンポーネントがアンマウントされたときにカメラを停止
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
-        (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+        (videoRef.current.srcObject as MediaStream)
+          .getTracks()
+          .forEach((track) => track.stop());
       }
     };
   }, []);
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-700 mb-2">バーコードスキャン</h2>
-      <div style={{ position: "relative", width: "100%", maxWidth: "400px" }}>
-        <video ref={videoRef} autoPlay playsInline muted style={{ 
-            width: "100%", 
-            maxWidth: "400px", 
-            height: "200px", 
-            objectFit: "cover", 
-            border: "1px solid #ccc" }} className="rounded-lg" />
-        <div
-            style={{
-            position: "absolute",
-            top: "50%",
-            left: "5%",
-            right: "5%",
-            height: "2px",
-            backgroundColor: "red",
-            transform: "translateY(-50%)",
-            }}
-      />
+      <h2 className="text-xl font-semibold text-gray-700 mb-2">
+        バーコードスキャン
+      </h2>
+      <div className="relative w-full max-w-sm">
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full max-w-sm h-48 object-cover border border-gray-300 rounded-lg"
+        />
+        <div className="absolute top-1/2 left-[5%] right-[5%] h-0.5 bg-red-500 transform -translate-y-1/2" />
       </div>
     </div>
   );
