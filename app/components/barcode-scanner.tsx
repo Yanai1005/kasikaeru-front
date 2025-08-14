@@ -4,15 +4,16 @@ export default function BarcodeScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const videoElement = videoRef.current;
     // カメラへのアクセス許可をリクエスト
     async function startCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
         });
-        if (videoRef.current) {
+        if (videoElement) {
           // カメラ映像をvideo要素にセット
-          videoRef.current.srcObject = stream;
+          videoElement.srcObject = stream;
         }
       } catch (err) {
         console.error("カメラへのアクセスに失敗しました:", err);
@@ -23,8 +24,8 @@ export default function BarcodeScanner() {
 
     // コンポーネントがアンマウントされたときにカメラを停止
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        (videoRef.current.srcObject as MediaStream)
+      if (videoElement && videoElement.srcObject) {
+        (videoElement.srcObject as MediaStream)
           .getTracks()
           .forEach((track) => track.stop());
       }
