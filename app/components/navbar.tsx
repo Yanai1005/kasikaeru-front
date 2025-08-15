@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from '@remix-run/react'
 
 export default function Navbar() {
   return (
@@ -19,5 +19,5 @@ export default function Navbar() {
         貸し出し
       </Link>
     </nav>
-  );
+  )
 }
