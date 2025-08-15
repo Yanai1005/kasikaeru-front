@@ -25,9 +25,8 @@ export default function BarcodeScanner() {
     // コンポーネントがアンマウントされたときにカメラを停止
     return () => {
       if (videoElement && videoElement.srcObject) {
-        (videoElement.srcObject as MediaStream)
-          .getTracks()
-          .forEach((track) => track.stop())
+        const stream = videoElement.srcObject as MediaStream
+        stream.getTracks().forEach((track) => track.stop())
       }
     }
   }, [])
