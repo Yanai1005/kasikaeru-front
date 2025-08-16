@@ -1,9 +1,4 @@
-import type { ObjectInfo } from '~/types/object'
-
-interface ObjectInfoDisplayProps {
-  objectInfo: ObjectInfo | null
-  loading: boolean
-}
+import type { ObjectInfoDisplayProps } from '~/types/barcode-scanner'
 
 export default function ObjectInfoDisplay({ objectInfo, loading }: ObjectInfoDisplayProps) {
   if (loading) {

@@ -7,10 +7,7 @@ import {
   DecodeHintType,
   BarcodeFormat,
 } from '@zxing/library'
-
-interface BarcodeScannerCameraProps {
-  onScanSuccess: (code: string) => void
-}
+import type { BarcodeScannerCameraProps } from '~/types/barcode-scanner'
 
 export default function BarcodeScannerCamera({ onScanSuccess }: BarcodeScannerCameraProps) {
   const videoRef = useRef<HTMLVideoElement>(null)

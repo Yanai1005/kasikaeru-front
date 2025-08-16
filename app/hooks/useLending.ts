@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react'
-import type { ObjectInfo, User } from '~/types/object'
+import type { ObjectInfo, User, UseLendingProps, UseLendingReturn } from '~/types/barcode-scanner'
 
-interface UseLendingProps {
-    apiUrl: string
-    onLendingComplete?: () => void
-}
-
-export function useLending({ apiUrl, onLendingComplete }: UseLendingProps) {
+export function useLending({ apiUrl, onLendingComplete }: UseLendingProps): UseLendingReturn {
     const [users, setUsers] = useState<User[]>([])
     const [objectInfo, setObjectInfo] = useState<ObjectInfo | null>(null)
     const [selectedUserId, setSelectedUserId] = useState<string>('')

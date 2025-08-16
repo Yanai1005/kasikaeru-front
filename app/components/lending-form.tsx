@@ -1,14 +1,4 @@
-import type { ObjectInfo, User } from '~/types/object'
-
-interface LendingFormProps {
-  objectInfo: ObjectInfo | null
-  users: User[]
-  selectedUserId: string
-  onUserSelect: (userId: string) => void
-  onLending: () => void
-  onReset: () => void
-  loading: boolean
-}
+import type { LendingFormProps } from '~/types/barcode-scanner'
 
 export default function LendingForm({
   objectInfo,

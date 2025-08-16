@@ -2,16 +2,12 @@ import BarcodeScannerCamera from './barcode-scanner-camera'
 import ObjectInfoDisplay from './object-info-display'
 import LendingForm from './lending-form'
 import { useLending } from '~/hooks/useLending'
-
-interface EnhancedBarcodeScannerProps {
-  apiUrl: string
-  onLendingComplete?: () => void
-}
+import type { BarcodeScannerProps } from '~/types/barcode-scanner'
 
 export default function BarcodeScanner({ 
   apiUrl, 
   onLendingComplete 
-}: EnhancedBarcodeScannerProps) {
+}: BarcodeScannerProps) {
   const {
     users,
     objectInfo,
