@@ -4,9 +4,9 @@ import LendingForm from './lending-form'
 import { useLending } from '~/hooks/useLending'
 import type { BarcodeScannerProps } from '~/types/barcode-scanner'
 import MessageDisplay from '../common/message-display'
-export default function BarcodeScanner({ 
-  apiUrl, 
-  onLendingComplete 
+export default function BarcodeScanner({
+  apiUrl,
+  onLendingComplete,
 }: BarcodeScannerProps) {
   const {
     users,
@@ -24,8 +24,10 @@ export default function BarcodeScanner({
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">バーコードスキャン - 貸し出し登録</h2>
-        
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          バーコードスキャン - 貸し出し登録
+        </h2>
+
         {/* カメラ映像とスキャン結果 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <BarcodeScannerCamera onScanSuccess={fetchObjectInfo} />

@@ -1,11 +1,19 @@
-import type { MetaFunction, LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/cloudflare'
+import type {
+  MetaFunction,
+  LoaderFunctionArgs,
+  ActionFunctionArgs,
+} from '@remix-run/cloudflare'
 import { useLoaderData, useFetcher } from '@remix-run/react'
 import { json } from '@remix-run/cloudflare'
 import Navbar from '~/components/common/navbar'
 import LendingRecordItem from '~/components/lending-record-item'
 import { LendingService } from '~/services/lendingService'
 import { EnvironmentService } from '~/services/environmentService'
-import type { LendingRecord, LendingStatusLoaderData, ReturnActionData } from '~/types/lending'
+import type {
+  LendingRecord,
+  LendingStatusLoaderData,
+  ReturnActionData,
+} from '~/types/lending'
 
 export async function loader({
   context,
@@ -45,7 +53,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
     return json({ success: true, message: '返却処理が完了しました' })
   } catch (error) {
     console.error('Error in return action:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred'
     return json({ error: errorMessage }, { status: 500 })
   }
 }
@@ -60,10 +69,7 @@ export default function LendingStatus() {
 
   const handleReturn = (recordId: number) => {
     if (confirm('この備品を返却しますか？')) {
-      fetcher.submit(
-        { recordId: recordId.toString() },
-        { method: 'post' }
-      )
+      fetcher.submit({ recordId: recordId.toString() }, { method: 'post' })
     }
   }
 
@@ -72,8 +78,12 @@ export default function LendingStatus() {
   }
 
   // アクティブな貸し出し記録のみフィルタリング
-  const activeLendingRecords = lendingRecords.filter(record => record.lent_state === 1)
-  const returnedLendingRecords = lendingRecords.filter(record => record.lent_state === 0)
+  const activeLendingRecords = lendingRecords.filter(
+    (record) => record.lent_state === 1
+  )
+  const returnedLendingRecords = lendingRecords.filter(
+    (record) => record.lent_state === 0
+  )
 
   if (error) {
     return (
@@ -102,7 +112,7 @@ export default function LendingStatus() {
         </h1>
       </header>
       <Navbar />
-      
+
       {/* 返却処理のフィードバック */}
       {fetcher.data?.success && (
         <div className="container mx-auto px-4 mt-4">
@@ -111,7 +121,7 @@ export default function LendingStatus() {
           </div>
         </div>
       )}
-      
+
       {fetcher.data?.error && (
         <div className="container mx-auto px-4 mt-4">
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -128,7 +138,9 @@ export default function LendingStatus() {
           </h2>
           {activeLendingRecords.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">貸し出し中の備品はありません</p>
+              <p className="text-gray-500 text-lg">
+                貸し出し中の備品はありません
+              </p>
             </div>
           ) : (
             <>
@@ -156,7 +168,9 @@ export default function LendingStatus() {
           </h2>
           {returnedLendingRecords.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">返却済みの記録はありません</p>
+              <p className="text-gray-500 text-lg">
+                返却済みの記録はありません
+              </p>
             </div>
           ) : (
             <>
