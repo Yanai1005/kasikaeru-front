@@ -1,4 +1,4 @@
-import type { AppEnvironment } from '~/types/lending';
+import type { AppEnvironment } from '~/types/environment';
 
 export class EnvironmentService {
     /**
