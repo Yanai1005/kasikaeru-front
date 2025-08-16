@@ -63,6 +63,63 @@ export function useBarcodeScanner({
         [scannedResult, onScanSuccess]
     )
 
+    // カメラ停止処理
+    const stopCamera = useCallback(() => {
+        const videoElement = videoRef.current
+
+        if (videoElement && videoElement.srcObject) {
+            const stream = videoElement.srcObject as MediaStream
+            stream.getTracks().forEach((track) => track.stop())
+            videoElement.srcObject = null
+        }
+
+        if (codeReader.current) {
+            codeReader.current.reset()
+        }
+
+        setIsVideoReady(false)
+        setIsCameraStarted(false)
+        setIsLoading(false)
+        setIsScanning(false)
+        setError(null)
+        setScannedResult(null)
+    }, [])
+
+    // スキャン開始処理
+    const startScanning = useCallback(() => {
+        const videoElement = videoRef.current
+        if (!codeReader.current || !videoElement) return
+
+        setScannedResult(null)
+        setError(null)
+
+        setIsScanning(true)
+        codeReader.current.decodeFromVideoDevice(
+            null,
+            videoElement,
+            (result, err) => {
+                if (result) {
+                    const scannedCode = result.getText()
+                    console.log('バーコードが検出されました:', scannedCode)
+                    handleBarcodeScanned(scannedCode)
+                }
+                if (err) {
+                    if (
+                        err instanceof NotFoundException ||
+                        err instanceof ChecksumException ||
+                        err instanceof FormatException
+                    ) {
+                        return
+                    }
+                    if (err.name === 'IndexSizeError') {
+                        return
+                    }
+                    console.error('スキャンエラー:', err)
+                }
+            }
+        )
+    }, [handleBarcodeScanned])
+
     // バーコードスキャナーの初期化
     useEffect(() => {
         const hints = new Map()
@@ -70,9 +127,19 @@ export function useBarcodeScanner({
         codeReader.current = new BrowserMultiFormatReader(hints)
 
         return () => {
-            stopCamera()
+            // コンポーネントがアンマウントされるときのみクリーンアップ
+            if (codeReader.current) {
+                codeReader.current.reset()
+            }
         }
     }, [formats])
+
+    // コンポーネントアンマウント時のクリーンアップ
+    useEffect(() => {
+        return () => {
+            stopCamera()
+        }
+    }, [stopCamera])
 
     const startCamera = async () => {
         const videoElement = videoRef.current
@@ -133,65 +200,8 @@ export function useBarcodeScanner({
         }
     }
 
-    // スキャン開始処理
-    const startScanning = () => {
-        const videoElement = videoRef.current
-        if (!codeReader.current || !videoElement) return
-
-        setScannedResult(null)
-        setError(null)
-
-        setIsScanning(true)
-        codeReader.current.decodeFromVideoDevice(
-            null,
-            videoElement,
-            (result, err) => {
-                if (result) {
-                    const scannedCode = result.getText()
-                    console.log('バーコードが検出されました:', scannedCode)
-                    handleBarcodeScanned(scannedCode)
-                }
-                if (err) {
-                    if (
-                        err instanceof NotFoundException ||
-                        err instanceof ChecksumException ||
-                        err instanceof FormatException
-                    ) {
-                        return
-                    }
-                    if (err.name === 'IndexSizeError') {
-                        return
-                    }
-                    console.error('スキャンエラー:', err)
-                }
-            }
-        )
-    }
-
-    // カメラ停止処理
-    const stopCamera = () => {
-        const videoElement = videoRef.current
-
-        if (videoElement && videoElement.srcObject) {
-            const stream = videoElement.srcObject as MediaStream
-            stream.getTracks().forEach((track) => track.stop())
-            videoElement.srcObject = null
-        }
-
-        if (codeReader.current) {
-            codeReader.current.reset()
-        }
-
-        setIsVideoReady(false)
-        setIsCameraStarted(false)
-        setIsLoading(false)
-        setIsScanning(false)
-        setError(null)
-        setScannedResult(null)
-    }
-
     // スキャン一時停止/再開
-    const toggleScanning = () => {
+    const toggleScanning = useCallback(() => {
         if (isScanning) {
             if (codeReader.current) {
                 codeReader.current.reset()
@@ -200,13 +210,13 @@ export function useBarcodeScanner({
         } else {
             startScanning()
         }
-    }
+    }, [isScanning, startScanning])
 
     // 結果クリア
-    const clearResult = () => {
+    const clearResult = useCallback(() => {
         setScannedResult(null)
         setError(null)
-    }
+    }, [])
 
     return {
         videoRef,
