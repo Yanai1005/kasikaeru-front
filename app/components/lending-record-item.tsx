@@ -28,17 +28,9 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
       <div className="flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
-            <p className="font-semibold text-gray-900">
-              <span className="text-sm text-gray-500 mr-2">貸出ID:</span>
-              {record.lent_id}
-            </p>
             <p className="font-semibold text-lg text-indigo-600 mt-1">
               <span className="text-sm text-gray-500 mr-2">備品名:</span>
               {record.object_name}
-            </p>
-            <p className="font-semibold text-gray-900">
-              <span className="text-sm text-gray-500 mr-2">備品ID:</span>
-              {record.object_id}
             </p>
           </div>
           <div>
@@ -52,7 +44,7 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
             </p>
             <p className="font-semibold text-gray-900">
               <span className="text-sm text-gray-500 mr-2">利用者:</span>
-              {record.user_name} (@{record.discord_id})
+              {record.user_name} 
             </p>
           </div>
         </div>
