@@ -1,0 +1,20 @@
+[
+  {
+    "objectId": 1,
+    "codeValue": "9784048967909",
+    "objectName": "Remix入門書",
+    "categoryId": "cat_002"
+  },
+  {
+    "objectId": 2,
+    "codeValue": "4901991651816",
+    "objectName": "フリクションボールペン",
+    "categoryId": "cat_003"
+  },
+  {
+    "objectId": 3,
+    "codeValue": "4549995166418",
+    "objectName": "MacBook Pro",
+    "categoryId": "cat_001"
+  }
+]

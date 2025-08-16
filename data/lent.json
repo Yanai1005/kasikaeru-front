@@ -1,0 +1,65 @@
+[
+  {
+    "lentId": 1,
+    "objectId": 1,
+    "discordId": "user_002",
+    "lentState": true,
+    "lentDate": "2025-08-14T10:00:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  },
+  {
+    "lentId": 2,
+    "objectId": 2,
+    "discordId": "user_001",
+    "lentState": false,
+    "lentDate": "2025-08-13T15:30:00Z"
+  }
+]
