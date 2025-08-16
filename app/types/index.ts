@@ -1,6 +1,7 @@
 export type {
     LendingRecord,
     LendingRecordItemProps,
+    LendingStatusLoaderData,
     LendingResponse,
     ReturnLendingRequest
 } from './lending';

@@ -16,6 +16,10 @@ export interface LendingRecordItemProps {
     onReturn?: (recordId: number) => void;
     showActions?: boolean;
 }
+export interface LendingStatusLoaderData {
+    lendingRecords: LendingRecord[];
+    error?: string;
+}
 
 export interface LendingResponse {
     success: boolean;
