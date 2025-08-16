@@ -18,7 +18,10 @@ export default function LendingForm({
       <h3 className="text-lg font-semibold text-gray-700 mb-4">貸し出し登録</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="user-select" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="user-select"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             貸し出し先ユーザー
           </label>
           <select

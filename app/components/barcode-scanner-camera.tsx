@@ -18,12 +18,15 @@ export default function BarcodeScannerCamera({
   const [error, setError] = useState<string | null>(null)
 
   // バーコードスキャン後の処理
-  const handleBarcodeScanned = useCallback((code: string) => {
-    if (scannedResult === code) return // 重複スキャン防止
+  const handleBarcodeScanned = useCallback(
+    (code: string) => {
+      if (scannedResult === code) return
 
-    setScannedResult(code)
-    onScanSuccess(code)
-  }, [scannedResult, onScanSuccess])
+      setScannedResult(code)
+      onScanSuccess(code)
+    },
+    [scannedResult, onScanSuccess]
+  )
 
   // バーコードスキャナーの初期化
   useEffect(() => {
