@@ -7,3 +7,5 @@ export type {
 } from './lending'
 
 export type { AppEnvironment, LoaderData, NavbarProps } from './environment'
+
+export type { ObjectInfo, User, LendingFormData } from './object'
