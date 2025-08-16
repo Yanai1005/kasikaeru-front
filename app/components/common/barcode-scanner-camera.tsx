@@ -16,6 +16,7 @@ export default function BarcodeScannerCamera({
   const codeReader = useRef<BrowserMultiFormatReader | null>(null)
   const [scannedResult, setScannedResult] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isVideoReady, setIsVideoReady] = useState<boolean>(false)
 
   // バーコードスキャン後の処理
   const handleBarcodeScanned = useCallback(
@@ -46,12 +47,45 @@ export default function BarcodeScannerCamera({
 
     async function startCamera() {
       try {
+        setError(null)
+        setIsVideoReady(false)
+        
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' }, // 背面カメラを優先
+          video: { facingMode: 'environment' }, 
         })
         if (videoElement) {
           videoElement.srcObject = stream
+          
+          // 動画の読み込み完了を待つ
+          await new Promise<void>((resolve, reject) => {
+            const handleLoadedData = () => {
+              videoElement.removeEventListener('loadeddata', handleLoadedData)
+              videoElement.removeEventListener('error', handleError)
+              setIsVideoReady(true)
+              resolve()
+            }
+            
+            const handleError = () => {
+              videoElement.removeEventListener('loadeddata', handleLoadedData)
+              videoElement.removeEventListener('error', handleError)
+              reject(new Error('動画の読み込みに失敗しました'))
+            }
+            
+            if (videoElement.readyState >= 2) {
+              setIsVideoReady(true)
+              resolve()
+            } else {
+              videoElement.addEventListener('loadeddata', handleLoadedData)
+              videoElement.addEventListener('error', handleError)
+            }
+          })
+          await new Promise(resolve => setTimeout(resolve, 500))
+
+          if (videoElement.videoWidth === 0 || videoElement.videoHeight === 0) {
+            throw new Error('動画のサイズが不正です')
+          }
         }
+        
         if (codeReader.current && videoElement) {
           codeReader.current.decodeFromVideoDevice(
             null,
@@ -70,6 +104,9 @@ export default function BarcodeScannerCamera({
                 ) {
                   return
                 }
+                if (err.name === 'IndexSizeError') {
+                  return
+                }
                 console.error('スキャンエラー:', err)
               }
             }
@@ -80,19 +117,28 @@ export default function BarcodeScannerCamera({
         setError(
           'カメラにアクセスできません。ブラウザの設定を確認してください。'
         )
+        setIsVideoReady(false)
       }
     }
 
     startCamera()
 
     return () => {
+      
       if (videoElement && videoElement.srcObject) {
         const stream = videoElement.srcObject as MediaStream
         stream.getTracks().forEach((track) => track.stop())
+        videoElement.srcObject = null
       }
+      
       if (codeReader.current) {
         codeReader.current.reset()
+        codeReader.current = null
       }
+      
+      setIsVideoReady(false)
+      setError(null)
+      setScannedResult(null)
     }
   }, [handleBarcodeScanned])
 
@@ -109,8 +155,19 @@ export default function BarcodeScannerCamera({
           playsInline
           muted
           className="w-full h-64 object-cover border border-gray-300 rounded-lg"
+          style={{ minHeight: '256px' }}
         />
-        <div className="absolute top-1/2 left-[10%] right-[10%] h-0.5 bg-red-500 transform -translate-y-1/2" />
+        {!isVideoReady && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-lg">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+              <p className="text-gray-600">カメラを起動中...</p>
+            </div>
+          </div>
+        )}
+        {isVideoReady && (
+          <div className="absolute top-1/2 left-[10%] right-[10%] h-0.5 bg-red-500 transform -translate-y-1/2" />
+        )}
       </div>
       {error && (
         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
