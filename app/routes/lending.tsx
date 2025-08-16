@@ -34,7 +34,7 @@ export default function Lending() {
       </header>
       <Navbar />
       <div className="mt-8">
-        <EnhancedBarcodeScanner 
+        <EnhancedBarcodeScanner
           apiUrl={apiUrl}
           onLendingComplete={handleLendingComplete}
         />

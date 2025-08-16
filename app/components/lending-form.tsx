@@ -7,7 +7,7 @@ export default function LendingForm({
   onUserSelect,
   onLending,
   onReset,
-  loading
+  loading,
 }: LendingFormProps) {
   if (!objectInfo || objectInfo.is_lent) {
     return null
@@ -35,7 +35,7 @@ export default function LendingForm({
             ))}
           </select>
         </div>
-        
+
         <div className="flex items-end gap-2">
           <button
             onClick={onLending}

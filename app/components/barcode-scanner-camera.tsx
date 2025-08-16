@@ -9,7 +9,9 @@ import {
 } from '@zxing/library'
 import type { BarcodeScannerCameraProps } from '~/types/barcode-scanner'
 
-export default function BarcodeScannerCamera({ onScanSuccess }: BarcodeScannerCameraProps) {
+export default function BarcodeScannerCamera({
+  onScanSuccess,
+}: BarcodeScannerCameraProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const codeReader = useRef<BrowserMultiFormatReader | null>(null)
   const [scannedResult, setScannedResult] = useState<string | null>(null)
@@ -34,7 +36,7 @@ export default function BarcodeScannerCamera({ onScanSuccess }: BarcodeScannerCa
     async function startCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' } // 背面カメラを優先
+          video: { facingMode: 'environment' }, // 背面カメラを優先
         })
         if (videoElement) {
           videoElement.srcObject = stream
@@ -64,7 +66,9 @@ export default function BarcodeScannerCamera({ onScanSuccess }: BarcodeScannerCa
         }
       } catch (err) {
         console.error('カメラへのアクセスに失敗しました:', err)
-        setError('カメラにアクセスできません。ブラウザの設定を確認してください。')
+        setError(
+          'カメラにアクセスできません。ブラウザの設定を確認してください。'
+        )
       }
     }
 
