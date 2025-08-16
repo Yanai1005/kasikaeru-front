@@ -28,8 +28,8 @@ export async function loader({ context }: LoaderFunctionArgs): Promise<LendingSt
 }
 
 export const meta: MetaFunction = () => {
-  return [{ title: "貸し出し状況 | 貸し借り管理システム" }];
-};
+  return [{ title: '貸し出し状況 | 貸し借り管理システム' }]
+}
 
 export default function LendingStatus() {
   const { lendingRecords, error } = useLoaderData<LendingStatusLoaderData>();
@@ -87,5 +87,5 @@ export default function LendingStatus() {
         )}
       </div>
     </div>
-  );
+  )
 }
