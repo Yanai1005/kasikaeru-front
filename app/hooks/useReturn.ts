@@ -4,6 +4,7 @@ import type {
   UseReturnProps,
   UseReturnReturn,
 } from '~/types/return-scanner'
+import type { LendingRecord } from '~/types/lending'
 
 export function useReturn({
   apiUrl,
@@ -71,9 +72,9 @@ export function useReturn({
         throw new Error('貸し出し記録の取得に失敗しました')
       }
 
-      const lentRecords: any[] = await lentRecordsResponse.json()
+      const lentRecords: LendingRecord[] = await lentRecordsResponse.json()
       const targetRecord = lentRecords.find(
-        (record: any) => record.object_id === objectInfo.object_id
+        (record: LendingRecord) => record.object_id === objectInfo.object_id
       )
 
       if (!targetRecord) {
@@ -89,7 +90,6 @@ export function useReturn({
       )
 
       if (!returnResponse.ok) {
-        const errorData = await returnResponse.json().catch(() => ({}))
         if (returnResponse.status === 404) {
           throw new Error('貸し出し記録が見つからないか、既に返却済みです')
         }
