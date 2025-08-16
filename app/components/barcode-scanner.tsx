@@ -4,8 +4,8 @@ import {
   NotFoundException,
   ChecksumException,
   FormatException,
-  DecodeHintType, 
-  BarcodeFormat
+  DecodeHintType,
+  BarcodeFormat,
 } from '@zxing/library'
 
 export default function BarcodeScanner() {
@@ -15,14 +15,14 @@ export default function BarcodeScanner() {
 
   useEffect(() => {
     // 読み取りたい形式を指定
-    const hints = new Map();
+    const hints = new Map()
     const formats = [
       BarcodeFormat.EAN_13,
       BarcodeFormat.UPC_A,
       BarcodeFormat.EAN_8,
       BarcodeFormat.CODE_128,
       BarcodeFormat.QR_CODE,
-    ];
+    ]
     hints.set(DecodeHintType.POSSIBLE_FORMATS, formats)
 
     // Readerを初期化
@@ -41,25 +41,29 @@ export default function BarcodeScanner() {
           videoElement.srcObject = stream
         }
         if (codeReader.current && videoElement) {
-          codeReader.current.decodeFromVideoDevice(null, videoElement, (result, err) => {
-            if (result) {
-              console.log('バーコードが検出されました:', result.getText())
-              // ここでバーコードの結果を処理
-              setScannedResult(result.getText())
-            }
-            if (err) {
-              // 見つからない/検証失敗/フォーマット不正は通常運用なので無視
-              if (
-                err instanceof NotFoundException ||
-                err instanceof ChecksumException ||
-                err instanceof FormatException
-              ) {
-                return
+          codeReader.current.decodeFromVideoDevice(
+            null,
+            videoElement,
+            (result, err) => {
+              if (result) {
+                console.log('バーコードが検出されました:', result.getText())
+                // ここでバーコードの結果を処理
+                setScannedResult(result.getText())
               }
-              // それ以外は本当のエラーとしてログ
-              console.error('スキャンエラー:', err)
+              if (err) {
+                // 見つからない/検証失敗/フォーマット不正は通常運用なので無視
+                if (
+                  err instanceof NotFoundException ||
+                  err instanceof ChecksumException ||
+                  err instanceof FormatException
+                ) {
+                  return
+                }
+                // それ以外は本当のエラーとしてログ
+                console.error('スキャンエラー:', err)
+              }
             }
-          })
+          )
         }
       } catch (err) {
         console.error('カメラへのアクセスに失敗しました:', err)
@@ -75,9 +79,8 @@ export default function BarcodeScanner() {
         stream.getTracks().forEach((track) => track.stop())
       }
       if (codeReader.current) {
-        codeReader.current.reset();
+        codeReader.current.reset()
       }
-
     }
   }, [])
 
@@ -89,9 +92,7 @@ export default function BarcodeScanner() {
       <p className="text-gray-600 mb-4">
         カメラを使用して97から始まるバーコードをスキャンしてください。
       </p>
-      <p className="text-gray-600 mb-4">
-        読み取り結果:{scannedResult}
-      </p>
+      <p className="text-gray-600 mb-4">読み取り結果:{scannedResult}</p>
 
       <div className="relative w-full max-w-sm">
         <video
