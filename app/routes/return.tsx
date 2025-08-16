@@ -28,7 +28,7 @@ export default function Return() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="mb-8 px-6 py-4">
-        <h1 className="text-3xl font-bold text-gray-800">
+        <h1 className="text-3xl font-bold text-black">
           返却 | 貸し借り管理システム
         </h1>
       </header>
