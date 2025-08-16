@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import {
   BrowserMultiFormatReader,
   NotFoundException,
@@ -16,6 +16,14 @@ export default function BarcodeScannerCamera({
   const codeReader = useRef<BrowserMultiFormatReader | null>(null)
   const [scannedResult, setScannedResult] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // バーコードスキャン後の処理
+  const handleBarcodeScanned = useCallback((code: string) => {
+    if (scannedResult === code) return // 重複スキャン防止
+
+    setScannedResult(code)
+    onScanSuccess(code)
+  }, [scannedResult, onScanSuccess])
 
   // バーコードスキャナーの初期化
   useEffect(() => {
@@ -83,15 +91,7 @@ export default function BarcodeScannerCamera({
         codeReader.current.reset()
       }
     }
-  }, [])
-
-  // バーコードスキャン後の処理
-  const handleBarcodeScanned = (code: string) => {
-    if (scannedResult === code) return // 重複スキャン防止
-
-    setScannedResult(code)
-    onScanSuccess(code)
-  }
+  }, [handleBarcodeScanned])
 
   return (
     <div>
