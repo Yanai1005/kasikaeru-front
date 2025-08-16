@@ -1,7 +1,7 @@
 import type { MetaFunction, LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
-import Navbar from '~/components/navbar'
-import EnhancedBarcodeScanner from '~/components/barcode-scanner'
+import Navbar from '~/components/common/navbar'
+import EnhancedBarcodeScanner from '~/components/lend/barcode-scanner'
 import { EnvironmentService } from '~/services/environmentService'
 
 export async function loader({ context }: LoaderFunctionArgs) {

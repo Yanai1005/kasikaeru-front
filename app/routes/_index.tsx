@@ -1,5 +1,5 @@
 import type { MetaFunction } from '@remix-run/cloudflare'
-import Navbar from '~/components/navbar'
+import Navbar from '~/components/common/navbar'
 
 export const meta: MetaFunction = () => {
   return [{ title: '貸し借り管理システム' }]
