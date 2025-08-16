@@ -9,9 +9,11 @@ export const meta: MetaFunction = () => {
 export default function Lending() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold text-gray-800">
-        貸し出し | 貸し借り管理システム
-      </h1>
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">
+          貸し出し | 貸し借り管理システム
+        </h1>
+      </header>
       <Navbar />
       <BarcodeScanner />
     </div>
