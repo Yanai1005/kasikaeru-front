@@ -1,6 +1,6 @@
 import BarcodeScannerCamera from '../common/barcode-scanner-camera'
-import ObjectInfoDisplay from '../object-info-display'
-import LendingForm from '../lending-form'
+import ObjectInfoDisplay from './object-info-display'
+import LendingForm from './lending-form'
 import { useLending } from '~/hooks/useLending'
 import type { BarcodeScannerProps } from '~/types/barcode-scanner'
 import MessageDisplay from '../common/message-display'
