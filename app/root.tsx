@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
+import { Provider as JotaiProvider } from 'jotai'
 
 import './tailwind.css'
 
@@ -41,5 +42,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />
+  return (
+    <JotaiProvider>
+      <Outlet />
+    </JotaiProvider>
+  )
 }
