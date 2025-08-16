@@ -1,0 +1,15 @@
+pre-commit:
+  commands:
+    prettier:
+      run: npm run lint:prettier
+      stage_fixed: false
+
+    eslint:
+      run: npm run lint:eslint
+      stage_fixed: false
+
+pre-push:
+  commands:
+    build:
+      run: npm run build
+      stage_fixed: false
