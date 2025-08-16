@@ -23,8 +23,7 @@ export default function BarcodeScanner() {
       BarcodeFormat.CODE_128,
       BarcodeFormat.QR_CODE,
     ];
-    hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
-    hints.set(DecodeHintType.TRY_HARDER, true);
+    hints.set(DecodeHintType.POSSIBLE_FORMATS, formats)
 
     // Readerを初期化
     codeReader.current = new BrowserMultiFormatReader(hints)
