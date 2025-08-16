@@ -1,12 +1,12 @@
 export interface AppEnvironment {
-    API_URL: string;
+  API_URL: string
 }
 
 export interface LoaderData<T = unknown> {
-    data?: T;
-    error?: string;
+  data?: T
+  error?: string
 }
 
 export interface NavbarProps {
-    currentPath?: string;
+  currentPath?: string
 }

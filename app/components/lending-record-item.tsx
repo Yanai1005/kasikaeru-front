@@ -1,27 +1,27 @@
-import type { LendingRecordItemProps } from "~/types/lending";
+import type { LendingRecordItemProps } from '~/types/lending'
 
-const LendingRecordItem: React.FC<LendingRecordItemProps> = ({ 
-  record, 
-  onReturn, 
-  showActions = false 
+const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
+  record,
+  onReturn,
+  showActions = false,
 }) => {
   const handleReturn = () => {
     if (onReturn) {
-      onReturn(record.id);
+      onReturn(record.id)
     }
-  };
+  }
 
   const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleString('ja-JP');
-  };
+    return new Date(dateString).toLocaleString('ja-JP')
+  }
 
   const getStatusColor = (lentState: number): string => {
-    return lentState === 1 ? 'text-red-500' : 'text-green-500';
-  };
+    return lentState === 1 ? 'text-red-500' : 'text-green-500'
+  }
 
   const getStatusText = (lentState: number): string => {
-    return lentState === 1 ? '貸出中' : '返却済み';
-  };
+    return lentState === 1 ? '貸出中' : '返却済み'
+  }
 
   return (
     <li className="p-4 border border-gray-200 rounded-lg shadow-sm flex flex-col sm:flex-row sm:justify-between sm:items-center">
@@ -44,20 +44,22 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
             </p>
             <p className="font-semibold text-gray-900">
               <span className="text-sm text-gray-500 mr-2">利用者:</span>
-              {record.user_name} 
+              {record.user_name}
             </p>
           </div>
         </div>
       </div>
-      
+
       <div className="mt-4 sm:mt-0 sm:ml-4 sm:text-right flex flex-col items-end">
         <p className="text-sm text-gray-500 mb-2">
           貸し出し日時: {formatDate(record.lent_date)}
         </p>
-        <p className={`font-bold text-lg mb-2 ${getStatusColor(record.lent_state)}`}>
+        <p
+          className={`font-bold text-lg mb-2 ${getStatusColor(record.lent_state)}`}
+        >
           {getStatusText(record.lent_state)}
         </p>
-        
+
         {showActions && record.lent_state === 1 && onReturn && (
           <button
             onClick={handleReturn}
@@ -68,7 +70,7 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
         )}
       </div>
     </li>
-  );
-};
+  )
+}
 
-export default LendingRecordItem;
+export default LendingRecordItem

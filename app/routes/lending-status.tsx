@@ -1,29 +1,30 @@
-import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
-import Navbar from "~/components/navbar";
-import LendingRecordItem from "~/components/lending-record-item";
-import { LendingService } from "~/services/lendingService";
-import { EnvironmentService } from "~/services/environmentService";
-import type { LendingRecord, LendingStatusLoaderData } from "~/types/lending";
+import type { MetaFunction, LoaderFunctionArgs } from '@remix-run/cloudflare'
+import { useLoaderData } from '@remix-run/react'
+import Navbar from '~/components/navbar'
+import LendingRecordItem from '~/components/lending-record-item'
+import { LendingService } from '~/services/lendingService'
+import { EnvironmentService } from '~/services/environmentService'
+import type { LendingRecord, LendingStatusLoaderData } from '~/types/lending'
 
-export async function loader({ context }: LoaderFunctionArgs): Promise<LendingStatusLoaderData> {
+export async function loader({
+  context,
+}: LoaderFunctionArgs): Promise<LendingStatusLoaderData> {
   try {
-    const apiUrl = EnvironmentService.getApiUrl(context.cloudflare.env);
-    const lendingService = new LendingService(apiUrl);
-    const lendingRecords = await lendingService.getAllLendingRecords();
+    const apiUrl = EnvironmentService.getApiUrl(context.cloudflare.env)
+    const lendingService = new LendingService(apiUrl)
+    const lendingRecords = await lendingService.getAllLendingRecords()
 
-    return { lendingRecords };
+    return { lendingRecords }
   } catch (error) {
-    console.error("Error in lending-status loader:", error);
-    
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : "Unknown error occurred";
+    console.error('Error in lending-status loader:', error)
 
-    return { 
-      lendingRecords: [], 
-      error: errorMessage 
-    };
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred'
+
+    return {
+      lendingRecords: [],
+      error: errorMessage,
+    }
   }
 }
 
@@ -32,11 +33,11 @@ export const meta: MetaFunction = () => {
 }
 
 export default function LendingStatus() {
-  const { lendingRecords, error } = useLoaderData<LendingStatusLoaderData>();
+  const { lendingRecords, error } = useLoaderData<LendingStatusLoaderData>()
 
   const generateRecordKey = (record: LendingRecord): string => {
-    return `${record.object_id}-${record.discord_id}-${record.lent_date}`;
-  };
+    return `${record.object_id}-${record.discord_id}-${record.lent_date}`
+  }
 
   if (error) {
     return (
@@ -54,7 +55,7 @@ export default function LendingStatus() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -77,9 +78,9 @@ export default function LendingStatus() {
             </div>
             <ul className="space-y-4">
               {lendingRecords.map((record) => (
-                <LendingRecordItem 
-                  key={generateRecordKey(record)} 
-                  record={record} 
+                <LendingRecordItem
+                  key={generateRecordKey(record)}
+                  record={record}
                 />
               ))}
             </ul>
