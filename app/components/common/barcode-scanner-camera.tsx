@@ -49,13 +49,13 @@ export default function BarcodeScannerCamera({
       try {
         setError(null)
         setIsVideoReady(false)
-        
+
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' }, 
+          video: { facingMode: 'environment' },
         })
         if (videoElement) {
           videoElement.srcObject = stream
-          
+
           // 動画の読み込み完了を待つ
           await new Promise<void>((resolve, reject) => {
             const handleLoadedData = () => {
@@ -64,13 +64,13 @@ export default function BarcodeScannerCamera({
               setIsVideoReady(true)
               resolve()
             }
-            
+
             const handleError = () => {
               videoElement.removeEventListener('loadeddata', handleLoadedData)
               videoElement.removeEventListener('error', handleError)
               reject(new Error('動画の読み込みに失敗しました'))
             }
-            
+
             if (videoElement.readyState >= 2) {
               setIsVideoReady(true)
               resolve()
@@ -79,13 +79,13 @@ export default function BarcodeScannerCamera({
               videoElement.addEventListener('error', handleError)
             }
           })
-          await new Promise(resolve => setTimeout(resolve, 500))
+          await new Promise((resolve) => setTimeout(resolve, 500))
 
           if (videoElement.videoWidth === 0 || videoElement.videoHeight === 0) {
             throw new Error('動画のサイズが不正です')
           }
         }
-        
+
         if (codeReader.current && videoElement) {
           codeReader.current.decodeFromVideoDevice(
             null,
@@ -124,18 +124,17 @@ export default function BarcodeScannerCamera({
     startCamera()
 
     return () => {
-      
       if (videoElement && videoElement.srcObject) {
         const stream = videoElement.srcObject as MediaStream
         stream.getTracks().forEach((track) => track.stop())
         videoElement.srcObject = null
       }
-      
+
       if (codeReader.current) {
         codeReader.current.reset()
         codeReader.current = null
       }
-      
+
       setIsVideoReady(false)
       setError(null)
       setScannedResult(null)
