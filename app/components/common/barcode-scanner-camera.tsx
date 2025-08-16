@@ -1,4 +1,6 @@
 import { useBarcodeScanner } from '~/hooks/useBarcodeScanner'
+import { useAtomValue } from 'jotai'
+import { scanButtonTextAtom, canStartScanningAtom } from '~/atoms/barcodeScannerAtoms'
 import type { BarcodeScannerCameraProps } from '~/types/barcode-scanner'
 
 export default function BarcodeScannerCamera({
@@ -16,6 +18,9 @@ export default function BarcodeScannerCamera({
     stopCamera,
     toggleScanning,
   } = useBarcodeScanner({ onScanSuccess })
+
+  const scanButtonText = useAtomValue(scanButtonTextAtom)
+  const canStartScanning = useAtomValue(canStartScanningAtom)
 
   return (
     <div>
@@ -45,12 +50,12 @@ export default function BarcodeScannerCamera({
           <>
             <button
               onClick={toggleScanning}
-              disabled={!isVideoReady}
+              disabled={!canStartScanning}
               className={`px-4 py-2 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${
                 isScanning ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600'
               }`}
             >
-              {isScanning ? 'スキャン一時停止' : scannedResult ? '再スキャン' : 'スキャン開始'}
+              {scanButtonText}
             </button>
             <button
               onClick={stopCamera}

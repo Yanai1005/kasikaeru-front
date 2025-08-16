@@ -1,51 +1,42 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
     BrowserMultiFormatReader,
     NotFoundException,
     ChecksumException,
     FormatException,
     DecodeHintType,
-    BarcodeFormat,
 } from '@zxing/library'
-
-export interface UseBarcodeScanner {
-    videoRef: React.RefObject<HTMLVideoElement>
-    scannedResult: string | null
-    error: string | null
-    isVideoReady: boolean
-    isCameraStarted: boolean
-    isLoading: boolean
-    isScanning: boolean
-    startCamera: () => Promise<void>
-    stopCamera: () => void
-    toggleScanning: () => void
-    clearResult: () => void
-}
+import {
+    scannedResultAtom,
+    errorAtom,
+    isVideoReadyAtom,
+    isCameraStartedAtom,
+    isLoadingAtom,
+    isScanningAtom,
+    barcodeFormatsAtom,
+    resetAllStateAtom,
+    clearResultAtom,
+} from '~/atoms/barcodeScannerAtoms'
 
 interface UseBarcodeScannerOptions {
     onScanSuccess: (code: string) => void
-    formats?: BarcodeFormat[]
 }
 
-export function useBarcodeScanner({
-    onScanSuccess,
-    formats = [
-        BarcodeFormat.EAN_13,
-        BarcodeFormat.UPC_A,
-        BarcodeFormat.EAN_8,
-        BarcodeFormat.CODE_128,
-        BarcodeFormat.QR_CODE,
-    ],
-}: UseBarcodeScannerOptions): UseBarcodeScanner {
+export function useBarcodeScanner({ onScanSuccess }: UseBarcodeScannerOptions) {
     const videoRef = useRef<HTMLVideoElement>(null)
     const codeReader = useRef<BrowserMultiFormatReader | null>(null)
 
-    const [scannedResult, setScannedResult] = useState<string | null>(null)
-    const [error, setError] = useState<string | null>(null)
-    const [isVideoReady, setIsVideoReady] = useState<boolean>(false)
-    const [isCameraStarted, setIsCameraStarted] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [isScanning, setIsScanning] = useState<boolean>(false)
+    // Jotai atoms
+    const [scannedResult, setScannedResult] = useAtom(scannedResultAtom)
+    const [error, setError] = useAtom(errorAtom)
+    const [isVideoReady, setIsVideoReady] = useAtom(isVideoReadyAtom)
+    const [isCameraStarted, setIsCameraStarted] = useAtom(isCameraStartedAtom)
+    const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
+    const [isScanning, setIsScanning] = useAtom(isScanningAtom)
+    const formats = useAtomValue(barcodeFormatsAtom)
+    const resetAllState = useSetAtom(resetAllStateAtom)
+    const clearResult = useSetAtom(clearResultAtom)
 
     // バーコードスキャン後の処理
     const handleBarcodeScanned = useCallback(
@@ -60,38 +51,15 @@ export function useBarcodeScanner({
             }
             setIsScanning(false)
         },
-        [scannedResult, onScanSuccess]
+        [scannedResult, onScanSuccess, setScannedResult, setIsScanning]
     )
-
-    // カメラ停止処理
-    const stopCamera = useCallback(() => {
-        const videoElement = videoRef.current
-
-        if (videoElement && videoElement.srcObject) {
-            const stream = videoElement.srcObject as MediaStream
-            stream.getTracks().forEach((track) => track.stop())
-            videoElement.srcObject = null
-        }
-
-        if (codeReader.current) {
-            codeReader.current.reset()
-        }
-
-        setIsVideoReady(false)
-        setIsCameraStarted(false)
-        setIsLoading(false)
-        setIsScanning(false)
-        setError(null)
-        setScannedResult(null)
-    }, [])
 
     // スキャン開始処理
     const startScanning = useCallback(() => {
         const videoElement = videoRef.current
         if (!codeReader.current || !videoElement) return
 
-        setScannedResult(null)
-        setError(null)
+        clearResult()
 
         setIsScanning(true)
         codeReader.current.decodeFromVideoDevice(
@@ -118,30 +86,27 @@ export function useBarcodeScanner({
                 }
             }
         )
-    }, [handleBarcodeScanned])
+    }, [handleBarcodeScanned, clearResult, setIsScanning])
 
-    // バーコードスキャナーの初期化
-    useEffect(() => {
-        const hints = new Map()
-        hints.set(DecodeHintType.POSSIBLE_FORMATS, formats)
-        codeReader.current = new BrowserMultiFormatReader(hints)
+    // カメラ停止処理
+    const stopCamera = useCallback(() => {
+        const videoElement = videoRef.current
 
-        return () => {
-            // コンポーネントがアンマウントされるときのみクリーンアップ
-            if (codeReader.current) {
-                codeReader.current.reset()
-            }
+        if (videoElement && videoElement.srcObject) {
+            const stream = videoElement.srcObject as MediaStream
+            stream.getTracks().forEach((track) => track.stop())
+            videoElement.srcObject = null
         }
-    }, [formats])
 
-    // コンポーネントアンマウント時のクリーンアップ
-    useEffect(() => {
-        return () => {
-            stopCamera()
+        if (codeReader.current) {
+            codeReader.current.reset()
         }
-    }, [stopCamera])
 
-    const startCamera = async () => {
+        resetAllState()
+    }, [resetAllState])
+
+    // カメラ開始処理
+    const startCamera = useCallback(async () => {
         const videoElement = videoRef.current
         if (!videoElement) return
 
@@ -198,7 +163,7 @@ export function useBarcodeScanner({
             setIsVideoReady(false)
             setIsCameraStarted(false)
         }
-    }
+    }, [setError, setIsLoading, setIsVideoReady, setIsCameraStarted, startScanning])
 
     // スキャン一時停止/再開
     const toggleScanning = useCallback(() => {
@@ -210,13 +175,27 @@ export function useBarcodeScanner({
         } else {
             startScanning()
         }
-    }, [isScanning, startScanning])
+    }, [isScanning, startScanning, setIsScanning])
 
-    // 結果クリア
-    const clearResult = useCallback(() => {
-        setScannedResult(null)
-        setError(null)
-    }, [])
+    // バーコードスキャナーの初期化
+    useEffect(() => {
+        const hints = new Map()
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, formats)
+        codeReader.current = new BrowserMultiFormatReader(hints)
+
+        return () => {
+            if (codeReader.current) {
+                codeReader.current.reset()
+            }
+        }
+    }, [formats])
+
+    // コンポーネントアンマウント時のクリーンアップ
+    useEffect(() => {
+        return () => {
+            stopCamera()
+        }
+    }, [stopCamera])
 
     return {
         videoRef,
