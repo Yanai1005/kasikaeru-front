@@ -31,3 +31,9 @@ export interface ReturnLendingRequest {
   id: number
   return_date: string
 }
+
+export interface ReturnActionData {
+  success?: boolean
+  message?: string
+  error?: string
+}

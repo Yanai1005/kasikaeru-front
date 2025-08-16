@@ -18,6 +18,12 @@ export default function Navbar() {
       >
         貸し出し
       </Link>
+      <Link
+        to="/return"
+        className="text-gray-800 font-semibold hover:text-blue-600"
+      >
+        返却
+      </Link>
     </nav>
   )
 }
