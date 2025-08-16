@@ -11,6 +11,19 @@ export interface LendingRecord {
     category_name: string;
 }
 
-export interface AppEnvironment {
-    API_URL: string;
+export interface LendingRecordItemProps {
+    record: LendingRecord;
+    onReturn?: (recordId: number) => void;
+    showActions?: boolean;
+}
+
+export interface LendingResponse {
+    success: boolean;
+    message?: string;
+    data?: LendingRecord[];
+}
+
+export interface ReturnLendingRequest {
+    id: number;
+    return_date: string;
 }
