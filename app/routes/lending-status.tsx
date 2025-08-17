@@ -107,7 +107,7 @@ export default function LendingStatus() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="mb-8 px-6 py-4">
-        <h1 className="text-3xl font-bold text-gray-800">
+        <h1 className="text-3xl font-bold text-black">
           貸し出し状況 | 貸し借り管理システム
         </h1>
       </header>
@@ -117,7 +117,7 @@ export default function LendingStatus() {
       {fetcher.data?.success && (
         <div className="container mx-auto px-4 mt-4">
           <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800">{fetcher.data.message}</p>
+            <p className="text-black">{fetcher.data.message}</p>
           </div>
         </div>
       )}
@@ -125,7 +125,7 @@ export default function LendingStatus() {
       {fetcher.data?.error && (
         <div className="container mx-auto px-4 mt-4">
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800">{fetcher.data.error}</p>
+            <p className="text-black">{fetcher.data.error}</p>
           </div>
         </div>
       )}
@@ -133,18 +133,16 @@ export default function LendingStatus() {
       <div className="container mx-auto p-4 space-y-8">
         {/* 貸し出し中の備品 */}
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">
+          <h2 className="text-xl font-bold text-black mb-4">
             🔴 貸し出し中の備品
           </h2>
           {activeLendingRecords.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">
-                貸し出し中の備品はありません
-              </p>
+              <p className="text-black text-lg">貸し出し中の備品はありません</p>
             </div>
           ) : (
             <>
-              <div className="mb-4 text-sm text-gray-600">
+              <div className="mb-4 text-sm text-black">
                 件数: {activeLendingRecords.length}件
               </div>
               <ul className="space-y-4">
@@ -163,18 +161,16 @@ export default function LendingStatus() {
 
         {/* 返却済みの備品 */}
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">
+          <h2 className="text-xl font-bold text-black mb-4">
             ✅ 返却済みの備品
           </h2>
           {returnedLendingRecords.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">
-                返却済みの記録はありません
-              </p>
+              <p className="text-black text-lg">返却済みの記録はありません</p>
             </div>
           ) : (
             <>
-              <div className="mb-4 text-sm text-gray-600">
+              <div className="mb-4 text-sm text-black">
                 件数: {returnedLendingRecords.length}件
               </div>
               <ul className="space-y-4">

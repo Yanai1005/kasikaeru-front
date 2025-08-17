@@ -16,7 +16,7 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
   }
 
   const getStatusColor = (lentState: number): string => {
-    return lentState === 1 ? 'text-red-500' : 'text-green-500'
+    return lentState === 1 ? 'text-black' : 'text-black'
   }
 
   const getStatusText = (lentState: number): string => {
@@ -28,22 +28,22 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
       <div className="flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
-            <p className="font-semibold text-lg text-indigo-600 mt-1">
-              <span className="text-sm text-gray-500 mr-2">備品名:</span>
+            <p className="font-semibold text-lg text-black mt-1">
+              <span className="text-sm text-black mr-2">備品名:</span>
               {record.object_name}
             </p>
           </div>
           <div>
-            <p className="font-semibold text-gray-900">
-              <span className="text-sm text-gray-500 mr-2">バーコード:</span>
+            <p className="font-semibold text-black">
+              <span className="text-sm text-black mr-2">バーコード:</span>
               {record.code_value}
             </p>
-            <p className="font-semibold text-gray-900">
-              <span className="text-sm text-gray-500 mr-2">カテゴリ:</span>
+            <p className="font-semibold text-black">
+              <span className="text-sm text-black mr-2">カテゴリ:</span>
               {record.category_name}
             </p>
-            <p className="font-semibold text-gray-900">
-              <span className="text-sm text-gray-500 mr-2">利用者:</span>
+            <p className="font-semibold text-black">
+              <span className="text-sm text-black mr-2">利用者:</span>
               {record.user_name}
             </p>
           </div>
@@ -51,7 +51,7 @@ const LendingRecordItem: React.FC<LendingRecordItemProps> = ({
       </div>
 
       <div className="mt-4 sm:mt-0 sm:ml-4 sm:text-right flex flex-col items-end">
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="text-sm text-black mb-2">
           貸し出し日時: {formatDate(record.lent_date)}
         </p>
         <p
