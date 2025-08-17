@@ -15,8 +15,14 @@ export class EnvironmentService {
 
     return {
       API_URL: environment.API_URL,
-      ALLOWED_IPS: typeof environment.ALLOWED_IPS === 'string' ? environment.ALLOWED_IPS : undefined,
-      IP_RESTRICTION_ENABLED: typeof environment.IP_RESTRICTION_ENABLED === 'string' ? environment.IP_RESTRICTION_ENABLED : 'false',
+      ALLOWED_IPS:
+        typeof environment.ALLOWED_IPS === 'string'
+          ? environment.ALLOWED_IPS
+          : undefined,
+      IP_RESTRICTION_ENABLED:
+        typeof environment.IP_RESTRICTION_ENABLED === 'string'
+          ? environment.IP_RESTRICTION_ENABLED
+          : 'false',
     }
   }
 
@@ -36,7 +42,9 @@ export class EnvironmentService {
     if (!ALLOWED_IPS) {
       return []
     }
-    return ALLOWED_IPS.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0)
+    return ALLOWED_IPS.split(',')
+      .map((ip) => ip.trim())
+      .filter((ip) => ip.length > 0)
   }
 
   /**

@@ -5,75 +5,103 @@ import { createPagesFunctionHandler } from '@remix-run/cloudflare-pages'
 // eslint-disable-next-line import/no-unresolved
 import * as build from '../build/server'
 
-function isIPInCIDR(ip: string, cidr: string): boolean {
-    const [network, prefixLength] = cidr.split('/')
-    const networkInt = ipToInt(network)
-    const ipInt = ipToInt(ip)
-    const mask = (-1 << (32 - parseInt(prefixLength))) >>> 0
+// Cloudflare Pages環境変数の型定義
+interface CloudflareEnvironment {
+  IP_RESTRICTION_ENABLED?: string
+  ALLOWED_IPS?: string
+  [key: string]: unknown
+}
 
-    return (ipInt & mask) === (networkInt & mask)
+function isIPInCIDR(ip: string, cidr: string): boolean {
+  const [network, prefixLength] = cidr.split('/')
+  const networkInt = ipToInt(network)
+  const ipInt = ipToInt(ip)
+  const mask = (-1 << (32 - parseInt(prefixLength))) >>> 0
+
+  return (ipInt & mask) === (networkInt & mask)
 }
 
 function ipToInt(ip: string): number {
-    return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet), 0) >>> 0
+  return (
+    ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet), 0) >>> 0
+  )
 }
 
 function isAllowedIP(ip: string, allowedIPs: string[]): boolean {
-    return allowedIPs.some(allowedIP => {
-        if (allowedIP.includes('/')) {
-            return isIPInCIDR(ip, allowedIP)
-        }
-        return ip === allowedIP
-    })
+  return allowedIPs.some((allowedIP) => {
+    if (allowedIP.includes('/')) {
+      return isIPInCIDR(ip, allowedIP)
+    }
+    return ip === allowedIP
+  })
 }
 
-function getAllowedIPsFromEnv(env: any): string[] {
-    if (env.ALLOWED_IPS && typeof env.ALLOWED_IPS === 'string') {
-        return env.ALLOWED_IPS.split(',').map((ip: string) => ip.trim()).filter((ip: string) => ip.length > 0)
-    }
-    return []
+function getAllowedIPsFromEnv(env: CloudflareEnvironment): string[] {
+  if (env.ALLOWED_IPS && typeof env.ALLOWED_IPS === 'string') {
+    return env.ALLOWED_IPS.split(',')
+      .map((ip: string) => ip.trim())
+      .filter((ip: string) => ip.length > 0)
+  }
+  return []
 }
 
-function isIPRestrictionEnabled(env: any): boolean {
-    return env.IP_RESTRICTION_ENABLED === 'true' && env.ALLOWED_IPS && typeof env.ALLOWED_IPS === 'string'
+function isIPRestrictionEnabled(env: CloudflareEnvironment): boolean {
+  return Boolean(
+    env.IP_RESTRICTION_ENABLED === 'true' &&
+      env.ALLOWED_IPS &&
+      typeof env.ALLOWED_IPS === 'string'
+  )
 }
 
-async function ipRestrictionMiddleware(context: EventContext<unknown, string, unknown>) {
-    const request = context.request
+async function ipRestrictionMiddleware(
+  context: EventContext<unknown, string, unknown>
+) {
+  const request = context.request
 
-    if (!isIPRestrictionEnabled(context.env)) {
-        return null
-    }
-
-    // クライアントIPアドレスを取得
-    const clientIP = request.headers.get('CF-Connecting-IP') ||
-        request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
-        request.headers.get('X-Real-IP') ||
-        '127.0.0.1'
-
-    // ローカルホストまたはプライベートIPの場合は開発環境として扱う
-    if (clientIP === '127.0.0.1' || clientIP === '::1' ||
-        clientIP.startsWith('192.168.') || clientIP.startsWith('10.') ||
-        clientIP.startsWith('172.16.') || clientIP.startsWith('172.17.') ||
-        clientIP.startsWith('172.18.') || clientIP.startsWith('172.19.') ||
-        clientIP.startsWith('172.2') || clientIP.startsWith('172.30.') ||
-        clientIP.startsWith('172.31.')) {
-        return null
-    }
-    const allowedIPs = getAllowedIPsFromEnv(context.env)
-
-    if (!isAllowedIP(clientIP, allowedIPs)) {
-        console.log(`Access denied for IP: ${clientIP}`)
-        return new Response(`Access Denied: Your IP address (${clientIP}) is not allowed to access this application.`, {
-            status: 403,
-            headers: {
-                'Content-Type': 'text/plain',
-            },
-        })
-    }
-
-    console.log(`Access granted for IP: ${clientIP}`)
+  if (!isIPRestrictionEnabled(context.env)) {
     return null
+  }
+
+  // クライアントIPアドレスを取得
+  const clientIP =
+    request.headers.get('CF-Connecting-IP') ||
+    request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
+    request.headers.get('X-Real-IP') ||
+    '127.0.0.1'
+
+  // ローカルホストまたはプライベートIPの場合は開発環境として扱う
+  if (
+    clientIP === '127.0.0.1' ||
+    clientIP === '::1' ||
+    clientIP.startsWith('192.168.') ||
+    clientIP.startsWith('10.') ||
+    clientIP.startsWith('172.16.') ||
+    clientIP.startsWith('172.17.') ||
+    clientIP.startsWith('172.18.') ||
+    clientIP.startsWith('172.19.') ||
+    clientIP.startsWith('172.2') ||
+    clientIP.startsWith('172.30.') ||
+    clientIP.startsWith('172.31.')
+  ) {
+    return null
+  }
+  const allowedIPs = getAllowedIPsFromEnv(context.env)
+
+  if (!isAllowedIP(clientIP, allowedIPs)) {
+    console.log(`Access denied for IP: ${clientIP}`)
+    return new Response(
+      `Access Denied: Your IP address (${clientIP}) is not allowed to access this application.`,
+      {
+        status: 403,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      }
+    )
+  }
+
+  console.log(`Access granted for IP: ${clientIP}`)
+  return null
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -81,9 +109,9 @@ async function ipRestrictionMiddleware(context: EventContext<unknown, string, un
 const remixHandler = createPagesFunctionHandler({ build })
 
 export const onRequest: PagesFunction = async (context) => {
-    const restrictionResponse = await ipRestrictionMiddleware(context)
-    if (restrictionResponse) {
-        return restrictionResponse
-    }
-    return remixHandler(context)
+  const restrictionResponse = await ipRestrictionMiddleware(context)
+  if (restrictionResponse) {
+    return restrictionResponse
+  }
+  return remixHandler(context)
 }
