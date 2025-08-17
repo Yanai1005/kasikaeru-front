@@ -15,6 +15,8 @@ export class EnvironmentService {
 
     return {
       API_URL: environment.API_URL,
+      ALLOWED_IPS: typeof environment.ALLOWED_IPS === 'string' ? environment.ALLOWED_IPS : undefined,
+      IP_RESTRICTION_ENABLED: typeof environment.IP_RESTRICTION_ENABLED === 'string' ? environment.IP_RESTRICTION_ENABLED : 'false',
     }
   }
 
@@ -24,5 +26,24 @@ export class EnvironmentService {
   static getApiUrl(env: unknown): string {
     const { API_URL } = this.getEnvironment(env)
     return API_URL
+  }
+
+  /**
+   * 許可されたIPアドレスのリストを取得
+   */
+  static getAllowedIPs(env: unknown): string[] {
+    const { ALLOWED_IPS } = this.getEnvironment(env)
+    if (!ALLOWED_IPS) {
+      return []
+    }
+    return ALLOWED_IPS.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0)
+  }
+
+  /**
+   * IP制限が有効かどうかを確認
+   */
+  static isIPRestrictionEnabled(env: unknown): boolean {
+    const { IP_RESTRICTION_ENABLED } = this.getEnvironment(env)
+    return IP_RESTRICTION_ENABLED === 'true'
   }
 }
