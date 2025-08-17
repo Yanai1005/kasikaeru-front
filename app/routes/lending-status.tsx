@@ -138,9 +138,7 @@ export default function LendingStatus() {
           </h2>
           {activeLendingRecords.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-black text-lg">
-                貸し出し中の備品はありません
-              </p>
+              <p className="text-black text-lg">貸し出し中の備品はありません</p>
             </div>
           ) : (
             <>
@@ -168,9 +166,7 @@ export default function LendingStatus() {
           </h2>
           {returnedLendingRecords.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-black text-lg">
-                返却済みの記録はありません
-              </p>
+              <p className="text-black text-lg">返却済みの記録はありません</p>
             </div>
           ) : (
             <>
